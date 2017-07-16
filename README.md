@@ -4,7 +4,7 @@
 
 ## Usage
 
-gradle bootRun
+gradlew bootRun
 
 
 ## License
