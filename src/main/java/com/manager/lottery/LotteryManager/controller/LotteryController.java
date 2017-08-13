@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequestMapping(value = "/LotteryManager")
 @RestController
 public class LotteryController {
 
@@ -26,8 +27,13 @@ public class LotteryController {
 
         final List<WinnerNumbers> winnerNumbers = lotteryService.listWinnerNumbers();
 
-        final String response = winnerNumbers.stream().map(number -> number.toString()).collect(Collectors.joining(" | "));
+        return winnerNumbers.stream().map(WinnerNumbers::toString).collect(Collectors.joining(" | "));
+    }
 
-        return response;
+    @RequestMapping(value = "/generate", produces = "text/html", method = RequestMethod.GET)
+    public String generateWinnerNumbers() {
+        WinnerNumbers generatedWinnerNumbers = lotteryService.generateWinnerNumbers();
+
+        return generatedWinnerNumbers.toString();
     }
 }

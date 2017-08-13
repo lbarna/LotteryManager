@@ -1,0 +1,11 @@
+logging:
+  level:
+    ROOT: ERROR
+    org.springframework.data: DEBUG
+
+mongodb:
+  uri:
+    - "localhost:27017"
+  database: "lotteryData"
+  socketTimeout: 20_000
+  connectTimeout: 20_000

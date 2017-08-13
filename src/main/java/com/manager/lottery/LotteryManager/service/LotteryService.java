@@ -26,4 +26,30 @@ public class LotteryService {
         return winnerNumbers;
     }
 
+    public WinnerNumbers generateWinnerNumbers() {
+        final WinnerNumbers winnerNumbers = createNewWinnerNumbers();
+        LOGGER.info("Generated winner numbers: " + winnerNumbers);
+
+        return repository.save(winnerNumbers);
+    }
+
+    private WinnerNumbers createNewWinnerNumbers() {
+        final WinnerNumbers winnerNumbers = new WinnerNumbers();
+        winnerNumbers.setNumbers(generateRandom());
+
+        return winnerNumbers;
+    }
+
+    private int[] generateRandom() {
+        final int[] numbers = new int[5];
+
+        for (int i = 0; i < 5; i++) {
+            numbers[i] = (int) (Math.random() * 90);
+        }
+
+        Arrays.sort(numbers);
+
+        return numbers;
+    }
+
 }
