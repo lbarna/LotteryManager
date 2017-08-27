@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @RequestMapping(value = "/LotteryManager")
 @RestController
@@ -21,13 +23,14 @@ public class LotteryController {
     @Autowired
     private LotteryService lotteryService;
 
-
     @RequestMapping(value = "/numbers", produces = "text/html", method = RequestMethod.GET)
-    public String listWinnerNumbers() {
+    public ModelAndView listWinnerNumbers() {
 
         final List<WinnerNumbers> winnerNumbers = lotteryService.listWinnerNumbers();
+        final Map<String, Object> params = new HashMap<>();
+        params.put("winnerNumbers", winnerNumbers);
 
-        return winnerNumbers.stream().map(WinnerNumbers::toString).collect(Collectors.joining(" | "));
+        return new ModelAndView("lottery", params);
     }
 
     @RequestMapping(value = "/generate", produces = "text/html", method = RequestMethod.GET)
