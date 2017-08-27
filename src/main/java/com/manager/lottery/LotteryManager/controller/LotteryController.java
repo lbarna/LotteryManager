@@ -23,8 +23,10 @@ public class LotteryController {
     @Autowired
     private LotteryService lotteryService;
 
+
     @RequestMapping(value = "/numbers", produces = "text/html", method = RequestMethod.GET)
     public ModelAndView listWinnerNumbers() {
+        LOGGER.info("Listing winner numbers");
 
         final List<WinnerNumbers> winnerNumbers = lotteryService.listWinnerNumbers();
         final Map<String, Object> params = new HashMap<>();
@@ -35,8 +37,16 @@ public class LotteryController {
 
     @RequestMapping(value = "/generate", produces = "text/html", method = RequestMethod.GET)
     public String generateWinnerNumbers() {
-        WinnerNumbers generatedWinnerNumbers = lotteryService.generateWinnerNumbers();
+        final WinnerNumbers generatedWinnerNumbers = lotteryService.generateWinnerNumbers();
+
+        LOGGER.info("Successfully generated a new suggestion: " + generatedWinnerNumbers);
 
         return generatedWinnerNumbers.toString();
+    }
+
+    @RequestMapping(value = "/updateDB", produces = "text/html", method = RequestMethod.GET)
+    public String downloadLatestDB() {
+        lotteryService.updateDB();
+        return "OK";
     }
 }

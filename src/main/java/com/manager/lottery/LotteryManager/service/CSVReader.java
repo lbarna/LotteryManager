@@ -1,6 +1,7 @@
 package com.manager.lottery.LotteryManager.service;
 
 import com.manager.lottery.LotteryManager.model.WinnerNumbers;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class CSVReader {
 
     private static final String LOTTERY_DATA_SOURCE_PATH = "otos.csv";
@@ -21,7 +23,6 @@ public class CSVReader {
         try {
             reader = new BufferedReader(new FileReader(file));
             String line;
-            String[] split;
 
             while ((line = reader.readLine()) != null) {
                 previousWinnerNumbers.add(new WinnerNumbers(line.split(";")));

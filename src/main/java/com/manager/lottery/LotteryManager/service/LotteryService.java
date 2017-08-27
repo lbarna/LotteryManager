@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class LotteryService {
@@ -18,38 +18,34 @@ public class LotteryService {
     @Autowired
     private LotteryRepository repository;
 
+    @Autowired
+    private CSVDownloaderService csvDownloaderService;
+
     public List<WinnerNumbers> listWinnerNumbers() {
-        final List<WinnerNumbers> winnerNumbers = repository.findAll();
-
-        winnerNumbers.forEach(number -> LOGGER.info("The winner numbers are: " + Arrays.toString(number.getNumbers())));
-
-        return winnerNumbers;
+        return repository.findAll();
     }
 
     public WinnerNumbers generateWinnerNumbers() {
-        final WinnerNumbers winnerNumbers = createNewWinnerNumbers();
-        LOGGER.info("Generated winner numbers: " + winnerNumbers);
-
-        return repository.save(winnerNumbers);
-    }
-
-    private WinnerNumbers createNewWinnerNumbers() {
         final WinnerNumbers winnerNumbers = new WinnerNumbers();
         winnerNumbers.setNumbers(generateRandom());
+
+        LOGGER.info("Generated winner numbers: " + winnerNumbers);
 
         return winnerNumbers;
     }
 
+    public void updateDB() {
+        final List<WinnerNumbers> latestWinnerNumbers = csvDownloaderService.downloadLatest();
+
+        repository.deleteAll();
+        LOGGER.info("Successfully truncated data in DB.");
+
+        repository.insert(latestWinnerNumbers);
+        LOGGER.info("Successfully updated database with latest data.");
+    }
+
     private int[] generateRandom() {
-        final int[] numbers = new int[5];
-
-        for (int i = 0; i < 5; i++) {
-            numbers[i] = (int) (Math.random() * 90);
-        }
-
-        Arrays.sort(numbers);
-
-        return numbers;
+        return new Random().ints(5, 1, 91).sorted().toArray();
     }
 
 }

@@ -1,6 +1,6 @@
 logging:
   level:
-    ROOT: ERROR
+    ROOT: INFO
     org.springframework.data: DEBUG
 
 mongodb:
@@ -9,3 +9,6 @@ mongodb:
   database: "lotteryData"
   socketTimeout: 20_000
   connectTimeout: 20_000
+
+lottery:
+  latestDataURL: "https://bet.szerencsejatek.hu/cmsfiles/otos.csv"
