@@ -1,7 +1,9 @@
 package com.manager.lottery.LotteryManager.service;
 
+import com.manager.lottery.LotteryManager.DownloadFailedException;
 import com.manager.lottery.LotteryManager.model.WinnerNumbers;
 import com.manager.lottery.LotteryManager.repository.LotteryRepository;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class LotteryService {
     @Autowired
     private CSVDownloaderService csvDownloaderService;
 
+    @Autowired
+    private CSVReader csvReader;
+
     public List<WinnerNumbers> listWinnerNumbers() {
         return repository.findAll();
     }
@@ -34,14 +39,27 @@ public class LotteryService {
         return winnerNumbers;
     }
 
-    public void updateDB() {
-        final List<WinnerNumbers> latestWinnerNumbers = csvDownloaderService.downloadLatest();
+    public boolean updateDB() {
+        Optional<List<WinnerNumbers>> latestWinnerNumbers = Optional.empty();
+        try {
+            latestWinnerNumbers = Optional.ofNullable(csvDownloaderService.downloadLatest());
+        } catch (DownloadFailedException e) {
+            LOGGER.warn("Downloading latest csv failed, reading data from local csv file.");
+            latestWinnerNumbers = Optional.ofNullable(csvReader.getPreviousWinnerNumbers());
+        }
 
-        repository.deleteAll();
-        LOGGER.info("Successfully truncated data in DB.");
+        if (latestWinnerNumbers.isPresent() && !latestWinnerNumbers.get().isEmpty()) {
+            repository.deleteAll();
+            LOGGER.info("Successfully truncated data in DB.");
 
-        repository.insert(latestWinnerNumbers);
-        LOGGER.info("Successfully updated database with latest data.");
+            repository.insert(latestWinnerNumbers.get());
+            LOGGER.info("Successfully updated database with latest data.");
+
+            return true;
+        } else {
+            LOGGER.warn("Database update failed.");
+            return false;
+        }
     }
 
     private int[] generateRandom() {

@@ -46,7 +46,6 @@ public class LotteryController {
 
     @RequestMapping(value = "/updateDB", produces = "text/html", method = RequestMethod.GET)
     public String downloadLatestDB() {
-        lotteryService.updateDB();
-        return "OK";
+        return lotteryService.updateDB() ? "DB update successful" : "DB update failed";
     }
 }
