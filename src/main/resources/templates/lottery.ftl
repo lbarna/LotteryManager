@@ -8,7 +8,35 @@
 <body>
     <h1>Welcome to Lottery Manager!</h2>
 
-    <h1>Previous winner numbers</h2>
+    <h2>Highest prize so far</h2>
+    <p>${highestPrize} Ft<p>
+
+    <h2>Total winners so far</h2>
+    <p>${totalWinners} (people)<p>
+
+    <h2>Win percentage</h2>
+    <p>${winPerc}%<p>
+
+    <h2>Highest win share count so far</h2>
+    <p>${winShare} (people)<p>
+
+    <h2>Previous most frequent winner numbers</h2>
+    <table>
+        <tr>
+            <th>Winner number</th>
+            <th>Count</th>
+        </tr>
+        <#assign mfn = mostFrequentNumbers!{} />
+        <#list mfn?keys as number>
+            <tr>
+                <td>${number}</td>
+                <td>${mfn[number]}</td>
+            </tr>
+        </#list>
+    <table>
+
+
+    <h2>Previous winner numbers</h2>
 
     <table>
         <tr>

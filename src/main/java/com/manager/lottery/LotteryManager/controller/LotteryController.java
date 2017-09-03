@@ -2,6 +2,7 @@ package com.manager.lottery.LotteryManager.controller;
 
 import com.manager.lottery.LotteryManager.model.WinnerNumbers;
 import com.manager.lottery.LotteryManager.service.LotteryService;
+import com.manager.lottery.LotteryManager.service.StatisticsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class LotteryController {
     @Autowired
     private LotteryService lotteryService;
 
+    @Autowired
+    private StatisticsService statisticsService;
+
 
     @RequestMapping(value = "/numbers", produces = "text/html", method = RequestMethod.GET)
     public ModelAndView listWinnerNumbers() {
@@ -31,6 +35,11 @@ public class LotteryController {
         final List<WinnerNumbers> winnerNumbers = lotteryService.listWinnerNumbers();
         final Map<String, Object> params = new HashMap<>();
         params.put("winnerNumbers", winnerNumbers);
+        params.put("mostFrequentNumbers", statisticsService.getMostFrequentNumbers(5));
+        params.put("highestPrize", statisticsService.getHighestPrize());
+        params.put("winShare", statisticsService.getHighestShareCount());
+        params.put("totalWinners", statisticsService.getTotalWinnersount());
+        params.put("winPerc", statisticsService.getWinPercentage());
 
         return new ModelAndView("lottery", params);
     }
