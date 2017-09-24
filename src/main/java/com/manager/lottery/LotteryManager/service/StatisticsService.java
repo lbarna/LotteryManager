@@ -55,7 +55,7 @@ public class StatisticsService {
         return winnerNumbers.stream().mapToInt(WinnerNumbers::getWinnersCount).max().orElse(0);
     }
 
-    public int getTotalWinnersount() {
+    public int getTotalWinnersCount() {
         final List<WinnerNumbers> winnerNumbers = repository.findAll();
 
         return winnerNumbers.stream().mapToInt(WinnerNumbers::getWinnersCount).sum();

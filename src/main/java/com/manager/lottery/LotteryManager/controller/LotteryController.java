@@ -3,8 +3,6 @@ package com.manager.lottery.LotteryManager.controller;
 import com.manager.lottery.LotteryManager.model.WinnerNumbers;
 import com.manager.lottery.LotteryManager.service.LotteryService;
 import com.manager.lottery.LotteryManager.service.StatisticsService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,12 +12,13 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @RequestMapping(value = "/LotteryManager")
 @RestController
 public class LotteryController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LotteryController.class);
+    private static final Logger LOGGER = Logger.getLogger(LotteryController.class.getCanonicalName());
 
     @Autowired
     private LotteryService lotteryService;
@@ -38,7 +37,7 @@ public class LotteryController {
         params.put("mostFrequentNumbers", statisticsService.getMostFrequentNumbers(5));
         params.put("highestPrize", statisticsService.getHighestPrize());
         params.put("winShare", statisticsService.getHighestShareCount());
-        params.put("totalWinners", statisticsService.getTotalWinnersount());
+        params.put("totalWinners", statisticsService.getTotalWinnersCount());
         params.put("winPerc", statisticsService.getWinPercentage());
 
         return new ModelAndView("lottery", params);
